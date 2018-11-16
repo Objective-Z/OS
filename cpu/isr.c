@@ -70,6 +70,8 @@ void isr_install(){
         set_idt_gate(47, (u32) irq15);
 	
 	set_idt();
+	
+	return;
 }
 
 void irq_install(){
@@ -121,9 +123,9 @@ void handler(registers_t r){
 	char s[3];
 	int_to_ascii(r.int_no, s);
 	kprint(s);
-	kprint_newline();
+	kprint("\n");
 	kprint(exception_messages[r.int_no]);
-	kprint_newline();
+	kprint("\n");
 }
 
 void register_interrupt_handler(u8 n, isr_t the_handler){

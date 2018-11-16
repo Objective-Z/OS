@@ -8,10 +8,7 @@
 //#include <string.c>
 
 void kmain(){
-	clear_screen();
 	isr_install();
 	irq_install();
-	kprint("Type something.  It will go through the kernel.");
-	kprint_newline();
-	kprint("> ");
+	kprint("Type something.  It will go through the kernel.\n>");
 }

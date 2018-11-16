@@ -22,7 +22,7 @@ kernel.bin: subroutines/kernel_entry.o ${OBJ}
 	ld -e kmain -o $@ -Ttext 0x1000 $^ --oformat binary
 
 # Used for debugging purposes
-kernel.elf: subroutines/kernel_entry.o ${OBJ}
+kernel.elf: boot/kernel_entry.o ${OBJ}
 	ld -o $@ -Ttext 0x1000 $^ 
 
 boot/bootsect.bin: boot/bootsect.asm
