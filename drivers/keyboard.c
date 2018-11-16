@@ -7,92 +7,37 @@
 #define BACKSPACE 0x0e
 #define ENTER 0x1c
 
+#define MAX_CODE 57
+
 static char buffer[256];
 
-const char* key_names[] = {
-                'A',
-                'B',
-                'C',
-                'D',
-                'E',
-                'F',
-                'G',
-                'H',
-                'I',
-                'J',
-                'K',
-                'L',
-                'M',
-                'N',
-                'O',
-                'P',
-                'Q',
-                'R',
-                'S',
-                'T',
-		'U',
-                'V',
-                'W',
-                'X',
-                'Y',
-                'Z'
-	};
-
-/*const char key_ascii[] = {
-		'A',
-		'B',
-		'C',
-		'D',
-		'E',
-		'F',
-		'G',
-		'H',
-		'I',
-		'J',
-		'K',
-		'L',
-		'M',
-		'N',
-		'O',
-		'P',
-		'Q',
-		'R',
-		'S',
-		'T',
-		'U',
-		'V',
-		'W',
-		'X',
-		'Y',
-		'Z'
-	};*/
-
-const char key_ascii[] = {'?', '?', '1', '2', '3', '4', '5', '6',
-			'7', '8', '9', '0', '-', '=', '?', '?',
-			'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I',
-			'O', 'P', '[', ']', '?', '?', 'A', 'S', 
-			'D', 'F', 'G', 'H', 'J', 'K', 'L', ';',
-			'\'', '`', '?', '\\', 'Z', 'X', 'C', 'V',
-			'B', 'N', 'M', ',', '.', '/', '?', '?', '?',
-			' '};
+const char key_ascii[] = {'?', '?', '1', '2', '3', '4', '5', '6',     
+    '7', '8', '9', '0', '-', '=', '?', '?', 'Q', 'W', 'E', 'R', 'T', 'Y', 
+        'U', 'I', 'O', 'P', '[', ']', '?', '?', 'A', 'S', 'D', 'F', 'G', 
+        'H', 'J', 'K', 'L', ';', '\'', '`', '?', '\\', 'Z', 'X', 'C', 'V', 
+        'B', 'N', 'M', ',', '.', '/', '?', '?', '?', ' '};
 
 static void keyboard_callback(registers_t regs){
-	u8 scan_code = port_byte_in(0x60);
-	if (scan_code > 57){
+	u8 key_code = port_byte_in(0x60);
+	//char c;
+	//int_to_ascii((int) key_code, c);
+	//kprint(c);
+	if (key_code > MAX_CODE){
 		return;
 	}
-	if (scan_code == BACKSPACE){
+	else if (key_code == BACKSPACE){
 		backspace(buffer);
 		kprint_backspace();
 	}
-	else if (scan_code == ENTER){
+	else if (key_code == ENTER){
 		kprint_newline();
 		input(buffer);
-		buffer[0] = '\0';
+		buffer[0] = (char) " ";
 	}
 	else{
-		char* letter = (char*) key_ascii[(int) scan_code];
-		char str[] = {letter, '\0'};
+		//kprint(buffer);
+		char letter = key_ascii[(int) key_code];
+		char str[2] = {letter, '\0'};
 		append(buffer, letter);
 		kprint(str);
 	}

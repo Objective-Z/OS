@@ -7,9 +7,9 @@ void memory_copy(u8* source, u8* dest, int nbytes){
 	}
 }
 
-void memory_set(u8* dest, u8 val, u32 length){
+void memory_set(u8* dest, u8 val, u32 len){
 	u8* temp = (u8*) dest;
-	for ( ; length != 0; length--){
+	for ( ; len != 0; len--){
 		*temp++ = val;
 	}
 }
@@ -23,16 +23,14 @@ void int_to_ascii(int n, char str[]){
 	
 	i = 0;
 	do{
-		str[i++] = (char) (n % 10 + '0');
+		str[i++] = (char) n % 10 + "0";
 	} while ((n /= 10) > 0);
 
 	if (sign < 0){
-		str[i++] = (char) '-';
+		str[i++] = (char) "-";
 	}
 	
-	str[i] = (char) '\0';
-
-	reverse(str);
+	str[i] = (char) "\0";
 }
 
 void reverse(char s[]){
@@ -46,7 +44,7 @@ void reverse(char s[]){
 
 int len(char s[]){
 	int i = 0;
-	while (s[i] != '\0'){
+	while (s[i] != (char) "\0"){
 		++i;
 	}
 
