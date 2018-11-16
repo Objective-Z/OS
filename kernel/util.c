@@ -1,15 +1,15 @@
 #include "util.h"
 
-void memory_copy(char* source, char* dest, int nbytes){
+void memory_copy(u8* source, u8* dest, int nbytes){
 	int i;
 	for (i = 0; i < nbytes; i++){
 		*(dest + i) = *(source + i);
 	}
 }
 
-void memory_set(u8* dest, u8 val, u32 len){
+void memory_set(u8* dest, u8 val, u32 length){
 	u8* temp = (u8*) dest;
-	for ( ; len != 0; len--){
+	for ( ; length != 0; length--){
 		*temp++ = val;
 	}
 }
@@ -23,14 +23,16 @@ void int_to_ascii(int n, char str[]){
 	
 	i = 0;
 	do{
-		str[i++] = (char) n % 10 + "0";
+		str[i++] = (char) (n % 10 + '0');
 	} while ((n /= 10) > 0);
 
 	if (sign < 0){
-		str[i++] = (char) "-";
+		str[i++] = (char) '-';
 	}
 	
-	str[i] = (char) "\0";
+	str[i] = (char) '\0';
+
+	reverse(str);
 }
 
 void reverse(char s[]){
@@ -44,7 +46,7 @@ void reverse(char s[]){
 
 int len(char s[]){
 	int i = 0;
-	while (s[i] != "\0"){
+	while (s[i] != '\0'){
 		++i;
 	}
 
@@ -58,7 +60,8 @@ void input(char* text){
 	}
 	kprint("You said: ");
 	kprint(text);
-	kprint("\n>");
+	kprint_newline();
+	kprint("> ");
 }
 
 void append(char s[], char n){
