@@ -38,7 +38,7 @@ const char* key_names[] = {
                 'Z'
 	};
 
-const char key_ascii[] = {
+/*const char key_ascii[] = {
 		'A',
 		'B',
 		'C',
@@ -65,23 +65,34 @@ const char key_ascii[] = {
 		'X',
 		'Y',
 		'Z'
-	};
+	};*/
+
+const char key_ascii[] = {'?', '?', '1', '2', '3', '4', '5', '6',
+			'7', '8', '9', '0', '-', '=', '?', '?',
+			'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I',
+			'O', 'P', '[', ']', '?', '?', 'A', 'S', 
+			'D', 'F', 'G', 'H', 'J', 'K', 'L', ';',
+			'\'', '`', '?', '\\', 'Z', 'X', 'C', 'V',
+			'B', 'N', 'M', ',', '.', '/', '?', '?', '?',
+			' '};
 
 static void keyboard_callback(registers_t regs){
-	u8 key_code = port_byte_in(0x60);
-	if (key_code == BACKSPACE){
+	u8 scan_code = port_byte_in(0x60);
+	if (scan_code > 57){
+		return;
+	}
+	if (scan_code == BACKSPACE){
 		backspace(buffer);
 		kprint_backspace();
 	}
-	else if (key_code == ENTER){
-		kprint("\n");
+	else if (scan_code == ENTER){
+		kprint_newline();
 		input(buffer);
 		buffer[0] = '\0';
 	}
 	else{
-		kprint(buffer);
-		char letter = key_ascii[(int) key_code];
-		char str[2] = {letter, '\0'};
+		char* letter = (char*) key_ascii[(int) scan_code];
+		char str[] = {letter, '\0'};
 		append(buffer, letter);
 		kprint(str);
 	}
