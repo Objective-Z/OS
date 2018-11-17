@@ -5,7 +5,7 @@
 
 #define VIDEO_ADDRESS 0xb8000
 #define MAX_ROWS 50
-#define MAX_COLS 50
+#define MAX_COLS 80
 #define WHITE_ON_BLACK 0x0f
 #define RED_ON_BLACK 0x04
 

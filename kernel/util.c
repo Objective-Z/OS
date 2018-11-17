@@ -23,14 +23,14 @@ void int_to_ascii(int n, char str[]){
 	
 	i = 0;
 	do{
-		str[i++] = (char) n % 10 + "0";
+		str[i++] = (char) (n % 10) + '0';
 	} while ((n /= 10) > 0);
 
 	if (sign < 0){
-		str[i++] = (char) "-";
+		str[i++] = '-';
 	}
 	
-	str[i] = (char) "\0";
+	str[i] = '\0';
 }
 
 void reverse(char s[]){
@@ -44,7 +44,7 @@ void reverse(char s[]){
 
 int len(char s[]){
 	int i = 0;
-	while (s[i] != (char) "\0"){
+	while (s[i] != '\0'){
 		++i;
 	}
 

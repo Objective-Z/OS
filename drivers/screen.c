@@ -84,25 +84,30 @@ int print_char(char c, int col, int row, char attr){
 		offset = get_cursor_offset();
 	}
 
-	/*if (c == (char) "\n"){
+	if (c == '\n'){
 		row = get_offset_row(offset);
 		offset = get_offset(0, row + 1);
-	}*/
-	//else{
+	}
+	else if (c == 0x08){
+		vidmem[offset] = ' ';
+		vidmem[offset + 1] = attr;
+	}
+	else{
 		vidmem[offset] = c;
 		vidmem[offset + 1] = attr;
 		offset += 2;
-	//}
+	}
 
 	//is offset larger than screen size?  if so, scroll.
-	if (offset >= 2 * MAX_COLS * MAX_ROWS){
+	//row = get_offset_row(offset);
+	if (offset >= MAX_COLS * MAX_ROWS){
 		int i;
 		for (i = 1; i < MAX_ROWS; i++){
 			memory_copy((u8*)(get_offset(0, i) + VIDEO_ADDRESS), (u8*)(get_offset(0, i - 1) + VIDEO_ADDRESS), 2 * MAX_COLS);
 		}
 		
 		//blank line
-		char* last_line = get_offset(0, MAX_ROWS - 1) +  VIDEO_ADDRESS;
+		char* last_line = (char*)(get_offset(0, MAX_ROWS - 1) + (u8*) VIDEO_ADDRESS);
 		for (i = 0; i < 2 * MAX_COLS; i++){
 			last_line[i] = 0;
 		}
