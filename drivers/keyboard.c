@@ -30,15 +30,16 @@ static void keyboard_callback(registers_t regs){
 		kprint_backspace();
 	}
 	else if (key_code == ENTER){
-		kprint_newline();
+		//kprint_newline();
+		kprint((u8*) '\n');
 		input(buffer);
 		buffer[0] = (char) " ";
 	}
 	else{
 		//kprint(buffer);
 		char letter = key_ascii[(int) key_code];
-		char str[2] = {letter, '\0'};
-		append(buffer, letter);
+		char str[2] = {letter, 0};
+		//append(buffer, letter);
 		kprint(str);
 	}
 

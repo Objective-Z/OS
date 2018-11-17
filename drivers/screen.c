@@ -12,7 +12,7 @@ int get_offset_col(int offset);
 //public kernel API
 
 //print message at the specified location.  if row or col is negative, use current offset
-void kprint_at(char* message, int col, int row){
+void kprint_at(u8* message, int col, int row){
 	//set cursor position if col or row is negative
 	int offset;
 	if (col >= 0 && row >= 0){
@@ -25,9 +25,9 @@ void kprint_at(char* message, int col, int row){
 	}
 
 	//print message by looping through each character
-	/***************************************************
-	*			UNTESTED		   *	
-	***************************************************/
+	/********************************************************
+	*			UNTESTED			*	
+	********************************************************/
 	int i = 0;
 	while(message[i] != 0){ 
 		offset = print_char(message[i++], col, row, WHITE_ON_BLACK);
@@ -38,7 +38,7 @@ void kprint_at(char* message, int col, int row){
 }
 
 //print message at current offset
-void kprint(char* message){
+void kprint(u8* message){
 	kprint_at(message, -1, -1);
 }
 
@@ -52,7 +52,8 @@ void kprint_backspace(){
 void kprint_newline(){
 	int offset = get_cursor_offset();
 	int row = get_offset_row(offset);
-	kprint_at((char*) " ", 0, row + 1);
+	kprint_at((u8*) " ", 0, row++);
+	set_cursor_offset(get_offset(1, row));
 }
 
 //private kernel functions
@@ -63,7 +64,7 @@ void kprint_newline(){
 //return the offset of the next character.  set the cursor 
 //to the next offset.
 int print_char(char c, int col, int row, char attr){
-	unsigned char* vidmem = (unsigned char*) VIDEO_ADDRESS;
+	u8* vidmem = (u8*) VIDEO_ADDRESS;
 	if (!attr){
 		attr = WHITE_ON_BLACK;
 	}
@@ -83,25 +84,25 @@ int print_char(char c, int col, int row, char attr){
 		offset = get_cursor_offset();
 	}
 
-	if (c == '\n'){
+	/*if (c == (char) "\n"){
 		row = get_offset_row(offset);
 		offset = get_offset(0, row + 1);
-	}
-	else{
+	}*/
+	//else{
 		vidmem[offset] = c;
 		vidmem[offset + 1] = attr;
 		offset += 2;
-	}
+	//}
 
 	//is offset larger than screen size?  if so, scroll.
 	if (offset >= 2 * MAX_COLS * MAX_ROWS){
 		int i;
 		for (i = 1; i < MAX_ROWS; i++){
-			memory_copy(get_offset(0, i) + VIDEO_ADDRESS, get_offset(0, i - 1) + VIDEO_ADDRESS, 2 * MAX_COLS);
+			memory_copy((u8*)(get_offset(0, i) + VIDEO_ADDRESS), (u8*)(get_offset(0, i - 1) + VIDEO_ADDRESS), 2 * MAX_COLS);
 		}
 		
 		//blank line
-		char* last_line = get_offset(0, MAX_ROWS - 1) + VIDEO_ADDRESS;
+		char* last_line = get_offset(0, MAX_ROWS - 1) +  VIDEO_ADDRESS;
 		for (i = 0; i < 2 * MAX_COLS; i++){
 			last_line[i] = 0;
 		}
@@ -128,7 +129,7 @@ int get_cursor_offset(){
 void set_cursor_offset(int offset){
 	offset /= 2;
 	port_byte_out(SCREEN_CTRL, 14);
-	port_byte_out(SCREEN_DATA, (u8) offset >> 8);
+	port_byte_out(SCREEN_DATA, (u8)(offset >> 8));
 	port_byte_out(SCREEN_CTRL, 15);
 	port_byte_out(SCREEN_DATA, (u8)(offset & 0xff));
 }
@@ -136,7 +137,7 @@ void set_cursor_offset(int offset){
 void clear_screen(){
 	int screen_size = MAX_COLS * MAX_ROWS;
 	int i;
-	char* screen = (char*) VIDEO_ADDRESS;
+	u8* screen = (u8*) VIDEO_ADDRESS;
 
 	for (i = 0; i < screen_size; i++){
 		screen[i * 2] = ' ';

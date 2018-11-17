@@ -10,7 +10,11 @@
 void kmain(){
 	isr_install();
 	irq_install();
+	clear_screen();
+	int offset = get_offset(0, 15);
+	set_cursor_offset(offset);
 	kprint("Type something.  It will go through the kernel.");
-	kprint_newline();
+	kprint((u8*) '\n');
+	//kprint_newline();
 	kprint("> ");
 }

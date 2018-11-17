@@ -19,10 +19,10 @@ cpu/interrupt.o: cpu/interrupt.asm
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
 kernel.bin: subroutines/kernel_entry.o ${OBJ}
-	ld -e kmain -o $@ -Ttext 0x1000 $^ --oformat binary
+	ld -e kmain -m elf_i386 -o $@ -Ttext 0x1000 $^ --oformat binary
 
 # Used for debugging purposes
-kernel.elf: boot/kernel_entry.o ${OBJ}
+kernel.elf: subroutines/kernel_entry.o ${OBJ}
 	ld -o $@ -Ttext 0x1000 $^ 
 
 boot/bootsect.bin: boot/bootsect.asm
@@ -39,10 +39,10 @@ debug: os-image.bin kernel.elf
 # Generic rules for wildcards
 # To make an object, always compile from its .c
 %.o: %.c ${HEADERS}
-	${CC} ${CFLAGS} -ffreestanding -c $< -o $@
+	${CC} ${CFLAGS} -m32 -fno-pie -ffreestanding -c $< -o $@
 
 %.o: %.asm
-	nasm $< -f elf -o $@
+	nasm $< -f elf32 -o $@
 
 %.bin: %.asm
 	nasm $< -f bin -o $@
