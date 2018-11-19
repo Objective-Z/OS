@@ -12,6 +12,8 @@ void input(char* text);
 void append(char s[], char n);
 void backspace(char s[]);
 int strcmp(char s1[], char s2[]);
+char* strcpy(char* dest, const char* src);
+u32 kmalloc(u32 size);
 
 #define UNUSED(x) (void)(x)
 

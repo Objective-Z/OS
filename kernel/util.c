@@ -29,16 +29,17 @@ void int_to_ascii(int n, char str[]){
 	if (sign < 0){
 		str[i++] = '-';
 	}
-	
-	str[i] = '\0';
+	reverse(str);
+	str[len(str)] = '\0';
 }
 
 void reverse(char s[]){
-	int c, i, j;
-	for (i = 0, j = len(s) - 1; i < j; i++, j--){
-		c = s[i];
-		s[i] = s[j];
-		s[j] = c;
+	int i, j;
+	for (i = 0, j = len(s) - 1; s[i] != '\0'; i++, j--){
+		//c = s[i];
+		//s[i] = s[j];
+		//s[j] = c;
+		s[i], s[j] = s[j], s[i];
 	}
 }
 
@@ -82,4 +83,37 @@ int strcmp(char s1[], char s2[]){
 	}
 	
 	return s1[i] - s2[i];
+}
+
+char* strcpy(char* dest, const char* src){
+	unsigned i;
+	for (i = 0; src[i] != '\0'; ++i){
+		dest[i] = src[i];
+	}
+
+	dest[i++] = '\0';
+	return dest;
+}
+
+u32 free_mem_addr = 0x10000;
+
+/*u32 kmalloc(u32 size, int align, u32* phys_addr){
+	if (align == 1 && (free_mem_addr & 0xfffff000)){
+		free_mem_addr &= 0xfffff000;
+		free_mem_addr += 0x1000;
+	}
+
+	if (phys_addr){
+		*phys_addr = free_mem_addr;
+	}
+
+	u32 ret = free_mem_addr;
+	free_mem_addr += size;
+	return ret;
+}*/
+
+u32 kmalloc(u32 size){
+	u32 tmp = free_mem_addr;
+	free_mem_addr += size;
+	return tmp;
 }

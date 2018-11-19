@@ -18,8 +18,11 @@ cpu/interrupt.o: cpu/interrupt.asm
 
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
-kernel.bin: subroutines/kernel_entry.o ${OBJ}
+kernel.bin: subroutines/kernel_entry.o drivers/initrd.o ${OBJ}
 	ld -e kmain -m elf_i386 -o $@ -Ttext 0x1000 $^ --oformat binary
+
+drivers/initrd.elf: kernel/util.o drivers/ports.o drivers/screen.o drivers/filesystem.o drivers/initrd.o
+	ld -m elf_i386 -o $@ $^
 
 # Used for debugging purposes
 kernel.elf: subroutines/kernel_entry.o ${OBJ}
