@@ -30,10 +30,11 @@ void kprint_at(u8* message, int col, int row){
 	********************************************************/
 	int i = 0;
 	while(message[i] != 0){ 
-		offset = print_char(message[i++], col, row, WHITE_ON_BLACK);
+		offset = print_char(message[i], col, row, WHITE_ON_BLACK);
 		//determine the next row and col
 		row = get_offset_row(offset);
 		col = get_offset_col(offset);
+		i++;
 	}
 }
 
@@ -148,7 +149,7 @@ void clear_screen(){
 		screen[i * 2] = ' ';
 		screen[i * 2 + 1] = WHITE_ON_BLACK;
 	}
-	set_cursor_offset(get_offset(0, 0));
+	set_cursor_offset(get_offset(1, 0));
 }
 
 int get_offset(int col, int row){
